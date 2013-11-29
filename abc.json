@@ -1,0 +1,15 @@
+{
+    "name": "bridge",
+    "version": "0.0.1",
+	"componentName":"Bridge",
+    "desc": "",
+    "cover": "",
+    "tag":"",
+    "author": {
+        "name": "",
+        "email": "",
+        "page": ""
+    },
+    "type": "kissy-gallery",
+    "type-url": "http://gallery.kissyui.com/guide"
+}

@@ -1,0 +1,20 @@
+{
+    "name": "bridge",
+    "version": "0.0.1",
+	"componentName":"Bridge",
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-copy": "",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt-contrib-less": "~0.5.0",
+        "grunt-css-combo": "~0.2.1",
+        "grunt-contrib-cssmin": "~0.5.0",
+        "grunt-contrib-watch": "~0.3.1",
+        "grunt-kmc": "",
+        "grunt-exec": "~0.4.1",
+		"fs-extra":"",
+		"grunt-replace":""
+    }
+
+}
