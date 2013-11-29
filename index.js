@@ -109,13 +109,11 @@
                 return;
             }
 
-            if(that.platform === 'android') {
-                return;
-            }
-
-            if(that.platform === 'ios') {
-                return;
-            }
+            that.pushBack('bridge:', 'client_info', {
+                successCallback: function(client_info) {
+                    that.client = client_info; //ttid, push_token, device_id, client_version, client_type
+                }
+            });
         },
 
         // 网络类型探测，用于检测当前环境的页面类型，如果是生存在浏览器中，
@@ -282,8 +280,34 @@
         },
 
         getRequestParam: function(uri, param) {
-            var value = uri.match(new RegExp('[\?\&]' + param + '=([^\&]*)(\&?)', 'i'));
-            return value ? value[1] : value;
+            var value;
+            uri = uri || window.location.href;
+            value = uri.match(new RegExp('[\?\&]' + param + '=([^\&]*)(\&?)', 'i'));
+            return value ? decodeURIComponent(value[1]) : value;
+        },
+
+        getRequestParams: function(uri) {
+            var search = location.search.substring(1);
+            uri = uri || window.location.href;
+            return search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) {
+                return key==="" ? value : decodeURIComponent(value);
+            }) : {};
+        },
+
+        // 获取URL和客户端传递的所有参数，会优先获取URL中的参数
+
+        getParams: function() {
+            var that = this;
+            var params = that.getParams();
+            var client = that.client;
+
+            for(var i in client) {
+                if(client.hasOwnProperty(i) && params.hasOwnProperty(i)) {
+                    params[i] = client[i];
+                }
+            }
+
+            return params;
         },
 
         notification: {
