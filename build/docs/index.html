@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>index.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>index.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="comment">/*
+ * A Bridge Between H5 And Native.
+ * By: Guokai @benbencc
+ * Created: 2013-7-24
+ * */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>面向Android和iOS的JS调用原理：</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Android 通过桥（客户端暴露在WebView全局对象下的一个对象，内挂各种API方法）
+的方式进行调用，如<code>window[&#39;Android_Bridge&#39;][&#39;method&#39;](JSON)</code>。iOS通过自定
+义Scheme（如<code>native://method?data=JSON</code>）方式调用。需要回调的接口需要将函
+数名称在调用时一并传给客户端，同时将回调函数通过唯一名称挂在全局，待客户端
+执行回调后移除该全局函数。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Bridge是为H5和客户端交互通讯而产生的一个中间件，即一个JavaScript的SDK。负责
+处理H5和客户端的方法调用、通信及H5页面自身的降级处理（非内嵌在客户端的情况）。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="keyword">var</span> Bridge = <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.init.apply(<span class="keyword">this</span>, arguments);
+    };
+
+    Bridge.prototype = {
+        version: <span class="string">'0.0.1'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>桥初始化，初始化过程中会：主动探测UA，判断页面所属的生存环境，如果是在客户端中，
+会探测获取客户端的平台类型和版本号，初始化消息队列，并主动探测网络类型，并同所属
+环境主动握手交换双方所需的额外基础信息。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        init: <span class="keyword">function</span>(bridgeName) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            that.platform = <span class="string">'h5'</span>;
+            that.bridgeName = bridgeName || <span class="string">'ali_trip_webview_bridge'</span>;
+            that.bridge = window[that.bridgeName];
+            that.userAgentDetect.apply(<span class="keyword">this</span>, arguments);
+            that.messageQueueInit();
+            that.deviceInfoDetect();
+            that.connectionInfoDetect();
+            that.handShake.apply(<span class="keyword">this</span>, arguments);
+
+            that.notification.superthat = that;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>消息队列初始化，针对iOS的实现机制单独做的处理，iOS会主动轮询
+消息队列中的操作，并批量取回处理。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        messageQueueInit: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'ios'</span>) {
+                window.messageQueue = [];
+                window.messageQueueFetch = <span class="keyword">function</span>() {
+                    <span class="keyword">var</span> response;
+                    response = window.messageQueue.length ? JSON.stringify(window.messageQueue) : <span class="string">''</span>;
+                    window.messageQueue = [];
+
+                    <span class="keyword">if</span>(response) {
+                        <span class="keyword">return</span> response;
+                    }
+                };
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>握手协议，用于页面同所属生存环境在首次初始化时进行基础信息交换。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        handShake: <span class="keyword">function</span>(callback) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'ready'</span>, {
+                data: {},
+                successCallback: <span class="keyword">function</span>() {
+                    callback &amp;&amp; callback();
+                }
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>UA探测，用于检测当前页面是否生存在淘宝旅行客户端内，如果在客户端内
+则继续获取客户端的平台类型及版本号用于后续的操作。</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>User-Agent Format:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; zh-cn; AliTrip/2.8.0) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile Safari/528.16
+Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile Safari/528.16</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>References:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><a href="http://www.ietf.org/rfc/rfc2616.txt">http://www.ietf.org/rfc/rfc2616.txt</a>
+<a href="http://www.useragentstring.com/">http://www.useragentstring.com/</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        userAgentDetect: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> ua = navigator.userAgent;
+            <span class="keyword">var</span> match = ua.match(<span class="regexp">/AliTrip[\s\/][\d\.]+/igm</span>);
+
+            <span class="keyword">if</span>(match) {
+                that.platform = ua.match(<span class="regexp">/(iPad|iPhone|iPod)/igm</span>) ? <span class="string">'ios'</span> : <span class="string">'android'</span>;
+                that.client.version = parseInt(match[<span class="number">0</span>].match(<span class="regexp">/[\d\.]+/igm</span>)[<span class="number">0</span>].split(<span class="string">'.'</span>).join(<span class="string">''</span>));
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>设备信息探测，用于检测当前页面的设备信息。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        deviceInfoDetect: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'client_info'</span>, {
+                successCallback: <span class="keyword">function</span>(client_info) {
+                    that.client = client_info; <span class="comment">//ttid, push_token, device_id, client_version, client_type</span>
+                }
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>网络类型探测，用于检测当前环境的页面类型，如果是生存在浏览器中，
+则取浏览器的<code>navigator.connection</code>属性，如果生存在客户端中，则
+根据协议接口进行获取，并作为桥的属性后续可被访问到。</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <pre><code>   {
+       &quot;type&quot; : &quot;2&quot;,
+       &quot;mapping&quot;: {
+           &quot;UNKNOWN&quot;: 0,
+           &quot;ETHERNET&quot;: 1,
+           &quot;WIFI&quot;: 2,
+           &quot;CELL_2G&quot;: 3,
+           &quot;CELL_3G&quot;: 4,
+           &quot;CELL_4G&quot;: 5,
+           &quot;CELL&quot;: 6,
+           &quot;NONE&quot;: 7,
+       }
+   }</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        connectionInfoDetect: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                that.connection = navigator.connection || {};
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'networktype'</span>, {
+                successCallback: <span class="keyword">function</span>(conn) {
+                    that.connection.type = conn;
+                }
+            });
+        },
+
+        sendURI: <span class="keyword">function</span>(uri, newProxy) {
+            <span class="keyword">var</span> proxy = <span class="keyword">this</span>.mClientProxy;
+            
+            <span class="keyword">if</span> (newProxy) {
+                <span class="keyword">this</span>.buildProxy(uri);
+                <span class="keyword">return</span> <span class="keyword">this</span>;
+            }
+
+            <span class="keyword">if</span> (proxy || (proxy = document.querySelector(<span class="string">'#J_MClientProxy'</span>))) {
+                proxy.attr(<span class="string">'src'</span>, uri);
+            } <span class="keyword">else</span> {
+                proxy = <span class="keyword">this</span>.buildProxy(uri);
+            }
+
+            <span class="keyword">this</span>.mClientProxy = proxy;
+            
+            <span class="keyword">return</span> <span class="keyword">this</span>;
+        },
+
+        buildRandom: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> random = <span class="keyword">new</span> Date().getTime() + <span class="string">'_'</span> + parseInt(Math.random() * <span class="number">1000000</span>);
+
+            <span class="keyword">return</span> random;
+        },
+        
+        buildProxy: <span class="keyword">function</span>(uri) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> guid = that.buildRandom();
+            <span class="keyword">var</span> iframeString = <span class="string">'&lt;iframe id="J_MClientProxy_'</span> + guid + <span class="string">'" class="hidden mclient-proxy" style="width:0;height:0;opacity:0;display:none;" src="'</span> + uri + <span class="string">'"&gt;&lt;/iframe&gt;'</span>;
+            <span class="keyword">var</span> proxy = $(iframeString);
+
+            $(<span class="string">'body'</span>).append(proxy);
+            <span class="keyword">return</span> proxy;
+        },
+
+        buildCallback: <span class="keyword">function</span>(fn) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> guid = that.buildRandom();
+            <span class="keyword">var</span> callbackName = <span class="string">'Bridge_Callbacks_'</span> + guid;
+
+            window[callbackName] = (<span class="keyword">function</span>(cb, callbackName) {
+                <span class="keyword">return</span> <span class="keyword">function</span>() {
+                    cb.apply(<span class="keyword">this</span>, arguments);
+                    <span class="keyword">delete</span> window[callbackName];
+                };
+            })(fn, callbackName);
+
+            <span class="keyword">return</span> callbackName;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>主要API，用于页面同客户端的协议回调，<code>protocol</code>协议默认为<code>native:</code>，
+可以省略不传，<code>host</code>为协议约定的主体，如<code>app/beep</code>，<code>data</code>为调用时
+传递给客户端的所需数据对象，对象内可包含<code>successCallback</code>和<code>failCallback</code>，
+鉴于iOS回调的实现机制，<code>newProxy</code>参数是为了避免在iOS下多次连续回调
+造成的消息丢失，当设为<code>true</code>时，每次均会创建一个新的<code>iframe</code>进行发送。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        pushBack: <span class="keyword">function</span>(protocol, host, data, newProxy) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> uri = (protocol || <span class="string">'native:'</span>) + <span class="string">'//'</span> + host + <span class="string">'?params='</span>;
+            <span class="keyword">var</span> callbackName;
+            <span class="keyword">var</span> args = [].slice.call(arguments);
+
+            <span class="keyword">if</span>(<span class="keyword">typeof</span>(protocol) !== <span class="string">'string'</span> || <span class="keyword">typeof</span>(host) !== <span class="string">'string'</span>) {
+                protocol = <span class="string">'native:'</span>;
+                host = args[<span class="number">0</span>];
+                data = args[<span class="number">1</span>];
+                newProxy = args[<span class="number">2</span>];
+                uri = (protocol || <span class="string">'native:'</span>) + <span class="string">'//'</span> + host + <span class="string">'?params='</span>;
+            }
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                <span class="keyword">return</span>;
+            }
+
+            data = data || {};
+
+            <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> data) {
+                <span class="keyword">if</span>(data.hasOwnProperty(i)) {
+                    <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i]) === <span class="string">'function'</span>) {
+                        callbackName = that.buildCallback(data[i]);
+                        data[i] = callbackName;
+                    }
+
+                    <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i]) === <span class="string">'object'</span> &amp;&amp; data[i].hasOwnProperty(<span class="string">'length'</span>)) {
+                        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; data[i].length; j++) {
+                            <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i][j]) === <span class="string">'function'</span>) {
+                                callbackName = that.buildCallback(data[i][j]);
+                                data[i][j] = callbackName;
+                            }
+                        }
+                    }
+
+                    <span class="keyword">if</span>(i !== i.replace(<span class="regexp">/([A-Z])/g</span>,<span class="string">"_$1"</span>).toLowerCase()) {
+                        data[i.replace(<span class="regexp">/([A-Z])/g</span>,<span class="string">"_$1"</span>).toLowerCase()] = data[i];
+                        <span class="keyword">delete</span> data[i];
+                    }
+                }
+            }
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'android'</span>) {
+                uri += encodeURIComponent(JSON.stringify(data));
+
+                <span class="keyword">if</span>(uri.match(<span class="regexp">/^native:\/\//igm</span>)) {
+                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativeService'</span>] &amp;&amp; that.bridge[<span class="string">'startNativeService'</span>](uri);
+                }
+
+                <span class="keyword">if</span>(uri.match(<span class="regexp">/^page:\/\//igm</span>))  {
+                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativePage'</span>] &amp;&amp; that.bridge[<span class="string">'startNativePage'</span>](uri);
+                }
+
+                <span class="keyword">if</span>(uri.match(<span class="regexp">/^bridge:\/\//igm</span>)) {
+                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativeBridge'</span>] &amp;&amp; that.bridge[<span class="string">'startNativeBridge'</span>](uri);
+                }
+
+                <span class="keyword">return</span>;
+            }
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'ios'</span>) {
+                uri += encodeURIComponent(JSON.stringify(data));
+                messageQueue.push(uri);
+                <span class="keyword">return</span>;
+            }
+
+            uri += encodeURIComponent(JSON.stringify(data));
+            that.sendURI(uri, newProxy);
+        },
+
+        getRequestParam: <span class="keyword">function</span>(uri, param) {
+            <span class="keyword">var</span> value;
+            uri = uri || window.location.href;
+            value = uri.match(<span class="keyword">new</span> RegExp(<span class="string">'[\?\&amp;]'</span> + param + <span class="string">'=([^\&amp;]*)(\&amp;?)'</span>, <span class="string">'i'</span>));
+            <span class="keyword">return</span> value ? decodeURIComponent(value[<span class="number">1</span>]) : value;
+        },
+
+        getRequestParams: <span class="keyword">function</span>(uri) {
+            <span class="keyword">var</span> search = location.search.substring(<span class="number">1</span>);
+            uri = uri || window.location.href;
+            <span class="keyword">return</span> search ? JSON.parse(<span class="string">'{"'</span> + search.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'","'</span>).replace(<span class="regexp">/=/g</span>,<span class="string">'":"'</span>) + <span class="string">'"}'</span>, <span class="keyword">function</span>(key, value) {
+                <span class="keyword">return</span> key===<span class="string">""</span> ? value : decodeURIComponent(value);
+            }) : {};
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>获取URL和客户端传递的所有参数，会优先获取URL中的参数</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        getParams: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> params = that.getParams();
+            <span class="keyword">var</span> client = that.client;
+
+            <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> client) {
+                <span class="keyword">if</span>(client.hasOwnProperty(i) &amp;&amp; params.hasOwnProperty(i)) {
+                    params[i] = client[i];
+                }
+            }
+
+            <span class="keyword">return</span> params;
+        },
+
+        notification: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><code>alert</code>弹框，对于浏览器的生存环境，仅<code>message</code>参数有效，但对于客户端类
+生存环境，则可以接收回调，以及弹出框的标题和按钮文案，回调中客户端会回
+传用户相应点击的按钮的索引值。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            alert: <span class="keyword">function</span>(message, alertCallback, title, buttonLabels) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+                <span class="keyword">var</span> callback = <span class="keyword">function</span>(ret) {
+                    <span class="keyword">var</span> buttonIndex = ret.buttonIndex;
+
+                    <span class="keyword">if</span>(Object.prototype.toString.call(alertCallback) === <span class="string">'[object Array]'</span>) {
+                        alertCallback[buttonIndex] &amp;&amp; alertCallback[buttonIndex].apply(<span class="keyword">this</span>, arguments);
+                        <span class="keyword">return</span>;
+                    }
+
+                    alertCallback &amp;&amp; alertCallback();
+                };
+
+                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
+                    alert.apply(<span class="literal">null</span>, arguments);
+                    <span class="keyword">return</span>;
+                }
+
+                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                    buttonLabels = [buttonLabels];
+                }
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'alert'</span>, {
+                    message: message,
+                    successCallback: callback,
+                    title: title,
+                    buttonNames: buttonLabels
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><code>confirm</code>确认对话框，对于浏览器的生存环境，仅<code>message</code>和<code>confirmCallback</code>
+参数有效，但对于客户端类生存环境，则可以接收回调，以及弹出框的标题和按钮
+文案，回调中客户端会回传用户相应点击的按钮的索引值。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            confirm: <span class="keyword">function</span>(message, confirmCallback, title, buttonLabels) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
+                    <span class="keyword">if</span>(confirm.apply(<span class="literal">null</span>, arguments)) {
+                        confirmCallback &amp;&amp; confirmCallback();
+                    }
+
+                    <span class="keyword">return</span>;
+                }
+
+                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                    buttonLabels = [buttonLabels];
+                }
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'confirm'</span>, {
+                    message: message,
+                    title: title,
+                    successCallback: confirmCallback,
+                    buttonNames: buttonLabels
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>prompt</code>提示对话框，对于浏览器的生存环境，仅<code>message</code>、<code>value</code>和
+<code>promptCallback</code>参数有效，但对于客户端类生存环境，则可以接收回调，
+以及弹出框的标题和按钮文案，回调中客户端会回传用户相应点击的按钮
+的索引值。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            prompt: <span class="keyword">function</span>(message, value, promptCallback, title, buttonLabels) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
+                    prompt.apply(<span class="literal">null</span>, arguments);
+                    <span class="keyword">return</span>;
+                }
+
+                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                    buttonLabels = [buttonLabels];
+                }
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'prompt'</span>, {
+                    message: message,
+                    value: value,
+                    successCallback: promptCallback,
+                    title: title,
+                    buttonNames: buttonLabels
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>弱提示，用于调用客户端的弱提示进行些许文案的提示。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            toast: <span class="keyword">function</span>(message, milliseconds) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
+                    <span class="keyword">return</span>;
+                }
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'toast'</span>, {
+                    message: message,
+                    milliseconds: milliseconds
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>蜂鸣，调用客户端的蜂鸣器按照指定的次数进行蜂鸣。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            beep: <span class="keyword">function</span>(times) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'beep'</span>, {
+                    times: times
+                });
+            },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>震动，进行设备的震动，持续指定的毫秒时长。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            vibrate: <span class="keyword">function</span>(milliseconds) {
+                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'vibrate'</span>, {
+                    milliseconds: milliseconds
+                });
+            }
+        },
+
+        device: {},
+
+        client: {},
+
+        connection: {},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>新开页面打开页面，浏览器生存环境下打开新的标签页，客户端生存环境
+下则调用系统浏览器打开相应新的页面。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        openBrowser: <span class="keyword">function</span>(url) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                window.open(url);
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'open_system_browser'</span>, {
+                url: url
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>针对iOS，跳转并打开AppStore的相应地址，对于浏览器而言则在新标签
+中打开对应的应用地址。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        openAppStore: <span class="keyword">function</span>(url) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                window.open(url);
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'open_app_store'</span>, {
+                url: url
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>客户端生存环境下设置WebView顶部的标题显示文案，对于浏览器则直接
+更改页面的标题文案。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        setTitle: <span class="keyword">function</span>(title) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                document.title = title;
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'set_webview_title'</span>, {
+                title: title
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>跳转到相应的客户端页面，如果有额外的数据则通过<code>ext</code>参数传递给客户端。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        open: <span class="keyword">function</span>(pagename, ext, successCallback, naviType, animeType) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> params = {
+                page_name: pagename,
+                data: ext || {},
+                successCallback: successCallback,
+                naviType: naviType || <span class="number">0</span>,
+                animeType: <span class="keyword">typeof</span>(animeType) !== <span class="string">'undefined'</span> ? animeType : <span class="number">4</span>
+            };
+
+            that.pushBack(<span class="string">'page:'</span>, <span class="string">'goto'</span>, params);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>返回上一页，对于浏览器而言，直接调用<code>history.back</code>返回上一个历史记录，
+对于客户端而言则通过协议调用返回上一个WebView打开的相应页面。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        back: <span class="keyword">function</span>(pagename, ext) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                history.back();
+                <span class="keyword">return</span>;
+            }
+
+            <span class="keyword">if</span>(pagename) {
+                that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'back'</span>, ext);
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'back'</span>, ext);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>关闭当前的客户端页面，如果有额外的数据则通过<code>ext</code>参数传递给客户端。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        close: <span class="keyword">function</span>(ext) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+
+            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+                window.close();
+                <span class="keyword">return</span>;
+            }
+
+            that.pushBack(<span class="string">'page:'</span>, <span class="string">'close'</span>, ext);
+        }
+    };
+
+    <span class="keyword">this</span>.Bridge = Bridge;
+
+}).call(<span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
