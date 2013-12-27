@@ -353,7 +353,7 @@ module.exports = function (grunt) {
 
         // 构建和发布任务
         if (!type) {
-            task.run(['clean:build', 'copy', 'less', 'css_combo', 'kmc', 'replace', 'uglify', 'cssmin'/*'concat','yuidoc'*/]);
+            task.run(['clean:build', 'copy', 'less', 'css_combo', /*'kmc',*/ 'replace', 'uglify', 'cssmin'/*'concat','yuidoc'*/]);
         } else if ('publish' === type || 'pub' === type) {
             task.run(['exec:tag', 'exec:publish']);
         } else if ('prepub' === type) {
