@@ -795,12 +795,12 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>客户端生存环境下设置WebView顶部的标题显示文案，对于浏览器则直接
-更改页面的标题文案。</p>
+更改页面的标题文案。子标题为可选参数，只适用在客户端内嵌的情况。</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        setTitle: <span class="keyword">function</span>(title) {
+        setTitle: <span class="keyword">function</span>(title, subtitle) {
             <span class="keyword">var</span> that = <span class="keyword">this</span>;
 
             <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
@@ -809,7 +809,8 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             }
 
             that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'set_webview_title'</span>, {
-                title: title
+                title: title,
+                subtitle: subtitle
             });
         },</pre></div></div>
             

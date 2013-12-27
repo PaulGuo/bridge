@@ -474,9 +474,9 @@
         },
 
         // 客户端生存环境下设置WebView顶部的标题显示文案，对于浏览器则直接
-        // 更改页面的标题文案。
+        // 更改页面的标题文案。子标题为可选参数，只适用在客户端内嵌的情况。
 
-        setTitle: function(title) {
+        setTitle: function(title, subtitle) {
             var that = this;
 
             if(that.platform === 'h5') {
@@ -485,7 +485,8 @@
             }
 
             that.pushBack('bridge:', 'set_webview_title', {
-                title: title
+                title: title,
+                subtitle: subtitle
             });
         },
 
