@@ -298,7 +298,7 @@
 
         getParams: function() {
             var that = this;
-            var params = that.getParams();
+            var params = that.getRequestParams();
             var client = that.client;
 
             for(var i in client) {
