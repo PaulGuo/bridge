@@ -535,6 +535,34 @@
             }
 
             that.pushBack('page:', 'close', ext);
+        },
+
+        // 客户端极简支付，如果有额外的数据则通过`ext`参数传递给客户端。
+
+        minipay: function(alipayId, nextUrl, ext, successCallback, failCallback) {
+            var that = this;
+            var payResult;
+            var params = {
+                alipay_id: alipayId,
+                data: ext || {},
+                successCallback: function(ret) {
+                    payResult = JSON.parse(ret);
+
+                    if(payResult.resultStatus === '9000') {
+                        successCallback && successCallback(payResult);
+                        return;
+                    }
+
+                    failCallback && failCallback(payResult);
+                }
+            };
+
+            if(that.platform === 'h5' && nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            that.pushBack('bridge:', 'minipay', params);
         }
     };
 

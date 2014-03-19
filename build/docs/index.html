@@ -30,7 +30,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="comment">/*
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
  * A Bridge Between H5 And Native.
  * By: Guokai @benbencc
  * Created: 2013-7-24
@@ -67,7 +67,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-(<span class="keyword">function</span>() {</pre></div></div>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></pre></div></div>
             
         </li>
         
@@ -84,12 +84,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-    <span class="keyword">var</span> Bridge = <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.init.apply(<span class="keyword">this</span>, arguments);
+    <span class="hljs-keyword">var</span> Bridge = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">this</span>.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
     };
 
     Bridge.prototype = {
-        version: <span class="string">'0.0.1'</span>,</pre></div></div>
+        version: <span class="hljs-string">'0.0.1'</span>,</pre></div></div>
             
         </li>
         
@@ -107,17 +107,17 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        init: <span class="keyword">function</span>(bridgeName) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(bridgeName)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            that.platform = <span class="string">'h5'</span>;
-            that.bridgeName = bridgeName || <span class="string">'ali_trip_webview_bridge'</span>;
+            that.platform = <span class="hljs-string">'h5'</span>;
+            that.bridgeName = bridgeName || <span class="hljs-string">'ali_trip_webview_bridge'</span>;
             that.bridge = window[that.bridgeName];
-            that.userAgentDetect.apply(<span class="keyword">this</span>, arguments);
+            that.userAgentDetect.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
             that.messageQueueInit();
             that.deviceInfoDetect();
             that.connectionInfoDetect();
-            that.handShake.apply(<span class="keyword">this</span>, arguments);
+            that.handShake.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
 
             that.notification.superthat = that;
         },</pre></div></div>
@@ -137,18 +137,18 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        messageQueueInit: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        messageQueueInit: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'ios'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'ios'</span>) {
                 window.messageQueue = [];
-                window.messageQueueFetch = <span class="keyword">function</span>() {
-                    <span class="keyword">var</span> response;
-                    response = window.messageQueue.length ? JSON.stringify(window.messageQueue) : <span class="string">''</span>;
+                window.messageQueueFetch = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">var</span> response;
+                    response = window.messageQueue.length ? <span class="hljs-built_in">JSON</span>.stringify(window.messageQueue) : <span class="hljs-string">''</span>;
                     window.messageQueue = [];
 
-                    <span class="keyword">if</span>(response) {
-                        <span class="keyword">return</span> response;
+                    <span class="hljs-keyword">if</span>(response) {
+                        <span class="hljs-keyword">return</span> response;
                     }
                 };
             }
@@ -168,12 +168,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        handShake: <span class="keyword">function</span>(callback) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        handShake: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(callback)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'ready'</span>, {
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'ready'</span>, {
                 data: {},
-                successCallback: <span class="keyword">function</span>() {
+                successCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                     callback &amp;&amp; callback();
                 }
             });
@@ -248,14 +248,14 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        userAgentDetect: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> ua = navigator.userAgent;
-            <span class="keyword">var</span> match = ua.match(<span class="regexp">/AliTrip[\s\/][\d\.]+/igm</span>);
+        userAgentDetect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> ua = navigator.userAgent;
+            <span class="hljs-keyword">var</span> match = ua.match(<span class="hljs-regexp">/AliTrip[\s\/][\d\.]+/igm</span>);
 
-            <span class="keyword">if</span>(match) {
-                that.platform = ua.match(<span class="regexp">/(iPad|iPhone|iPod)/igm</span>) ? <span class="string">'ios'</span> : <span class="string">'android'</span>;
-                that.client.version = parseInt(match[<span class="number">0</span>].match(<span class="regexp">/[\d\.]+/igm</span>)[<span class="number">0</span>].split(<span class="string">'.'</span>).join(<span class="string">''</span>));
+            <span class="hljs-keyword">if</span>(match) {
+                that.platform = ua.match(<span class="hljs-regexp">/(iPad|iPhone|iPod)/igm</span>) ? <span class="hljs-string">'ios'</span> : <span class="hljs-string">'android'</span>;
+                that.client.version = <span class="hljs-built_in">parseInt</span>(match[<span class="hljs-number">0</span>].match(<span class="hljs-regexp">/[\d\.]+/igm</span>)[<span class="hljs-number">0</span>].split(<span class="hljs-string">'.'</span>).join(<span class="hljs-string">''</span>));
             }
         },</pre></div></div>
             
@@ -273,16 +273,16 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        deviceInfoDetect: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        deviceInfoDetect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
-                <span class="keyword">return</span>;
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'client_info'</span>, {
-                successCallback: <span class="keyword">function</span>(client_info) {
-                    that.client = client_info; <span class="comment">//ttid, push_token, device_id, client_version, client_type</span>
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'client_info'</span>, {
+                successCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(client_info)</span> {</span>
+                    that.client = client_info; <span class="hljs-comment">//ttid, push_token, device_id, client_version, client_type</span>
                 }
             });
         },</pre></div></div>
@@ -312,86 +312,86 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <pre><code>   {
-       &quot;type&quot; : &quot;2&quot;,
-       &quot;mapping&quot;: {
-           &quot;UNKNOWN&quot;: 0,
-           &quot;ETHERNET&quot;: 1,
-           &quot;WIFI&quot;: 2,
-           &quot;CELL_2G&quot;: 3,
-           &quot;CELL_3G&quot;: 4,
-           &quot;CELL_4G&quot;: 5,
-           &quot;CELL&quot;: 6,
-           &quot;NONE&quot;: 7,
+       <span class="hljs-string">"type"</span> : <span class="hljs-string">"2"</span>,
+       <span class="hljs-string">"mapping"</span>: {
+           <span class="hljs-string">"UNKNOWN"</span>: <span class="hljs-number">0</span>,
+           <span class="hljs-string">"ETHERNET"</span>: <span class="hljs-number">1</span>,
+           <span class="hljs-string">"WIFI"</span>: <span class="hljs-number">2</span>,
+           <span class="hljs-string">"CELL_2G"</span>: <span class="hljs-number">3</span>,
+           <span class="hljs-string">"CELL_3G"</span>: <span class="hljs-number">4</span>,
+           <span class="hljs-string">"CELL_4G"</span>: <span class="hljs-number">5</span>,
+           <span class="hljs-string">"CELL"</span>: <span class="hljs-number">6</span>,
+           <span class="hljs-string">"NONE"</span>: <span class="hljs-number">7</span>,
        }
-   }</code></pre>
-
+   }
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        connectionInfoDetect: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        connectionInfoDetect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 that.connection = navigator.connection || {};
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'networktype'</span>, {
-                successCallback: <span class="keyword">function</span>(conn) {
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'networktype'</span>, {
+                successCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(conn)</span> {</span>
                     that.connection.type = conn;
                 }
             });
         },
 
-        sendURI: <span class="keyword">function</span>(uri, newProxy) {
-            <span class="keyword">var</span> proxy = <span class="keyword">this</span>.mClientProxy;
+        sendURI: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(uri, newProxy)</span> {</span>
+            <span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">this</span>.mClientProxy;
             
-            <span class="keyword">if</span> (newProxy) {
-                <span class="keyword">this</span>.buildProxy(uri);
-                <span class="keyword">return</span> <span class="keyword">this</span>;
+            <span class="hljs-keyword">if</span> (newProxy) {
+                <span class="hljs-keyword">this</span>.buildProxy(uri);
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
             }
 
-            <span class="keyword">if</span> (proxy || (proxy = document.querySelector(<span class="string">'#J_MClientProxy'</span>))) {
-                proxy.attr(<span class="string">'src'</span>, uri);
-            } <span class="keyword">else</span> {
-                proxy = <span class="keyword">this</span>.buildProxy(uri);
+            <span class="hljs-keyword">if</span> (proxy || (proxy = document.querySelector(<span class="hljs-string">'#J_MClientProxy'</span>))) {
+                proxy.attr(<span class="hljs-string">'src'</span>, uri);
+            } <span class="hljs-keyword">else</span> {
+                proxy = <span class="hljs-keyword">this</span>.buildProxy(uri);
             }
 
-            <span class="keyword">this</span>.mClientProxy = proxy;
+            <span class="hljs-keyword">this</span>.mClientProxy = proxy;
             
-            <span class="keyword">return</span> <span class="keyword">this</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
         },
 
-        buildRandom: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> random = <span class="keyword">new</span> Date().getTime() + <span class="string">'_'</span> + parseInt(Math.random() * <span class="number">1000000</span>);
+        buildRandom: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> random = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime() + <span class="hljs-string">'_'</span> + <span class="hljs-built_in">parseInt</span>(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">1000000</span>);
 
-            <span class="keyword">return</span> random;
+            <span class="hljs-keyword">return</span> random;
         },
         
-        buildProxy: <span class="keyword">function</span>(uri) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> guid = that.buildRandom();
-            <span class="keyword">var</span> iframeString = <span class="string">'&lt;iframe id="J_MClientProxy_'</span> + guid + <span class="string">'" class="hidden mclient-proxy" style="width:0;height:0;opacity:0;display:none;" src="'</span> + uri + <span class="string">'"&gt;&lt;/iframe&gt;'</span>;
-            <span class="keyword">var</span> proxy = $(iframeString);
+        buildProxy: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(uri)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> guid = that.buildRandom();
+            <span class="hljs-keyword">var</span> iframeString = <span class="hljs-string">'&lt;iframe id="J_MClientProxy_'</span> + guid + <span class="hljs-string">'" class="hidden mclient-proxy" style="width:0;height:0;opacity:0;display:none;" src="'</span> + uri + <span class="hljs-string">'"&gt;&lt;/iframe&gt;'</span>;
+            <span class="hljs-keyword">var</span> proxy = $(iframeString);
 
-            $(<span class="string">'body'</span>).append(proxy);
-            <span class="keyword">return</span> proxy;
+            $(<span class="hljs-string">'body'</span>).append(proxy);
+            <span class="hljs-keyword">return</span> proxy;
         },
 
-        buildCallback: <span class="keyword">function</span>(fn) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> guid = that.buildRandom();
-            <span class="keyword">var</span> callbackName = <span class="string">'Bridge_Callbacks_'</span> + guid;
+        buildCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> guid = that.buildRandom();
+            <span class="hljs-keyword">var</span> callbackName = <span class="hljs-string">'Bridge_Callbacks_'</span> + guid;
 
-            window[callbackName] = (<span class="keyword">function</span>(cb, callbackName) {
-                <span class="keyword">return</span> <span class="keyword">function</span>() {
-                    cb.apply(<span class="keyword">this</span>, arguments);
-                    <span class="keyword">delete</span> window[callbackName];
+            window[callbackName] = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(cb, callbackName)</span> {</span>
+                <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    cb.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+                    <span class="hljs-keyword">delete</span> window[callbackName];
                 };
             })(fn, callbackName);
 
-            <span class="keyword">return</span> callbackName;
+            <span class="hljs-keyword">return</span> callbackName;
         },</pre></div></div>
             
         </li>
@@ -412,89 +412,89 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        pushBack: <span class="keyword">function</span>(protocol, host, data, newProxy) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> uri = (protocol || <span class="string">'native:'</span>) + <span class="string">'//'</span> + host + <span class="string">'?params='</span>;
-            <span class="keyword">var</span> callbackName;
-            <span class="keyword">var</span> args = [].slice.call(arguments);
+        pushBack: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(protocol, host, data, newProxy)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> uri = (protocol || <span class="hljs-string">'native:'</span>) + <span class="hljs-string">'//'</span> + host + <span class="hljs-string">'?params='</span>;
+            <span class="hljs-keyword">var</span> callbackName;
+            <span class="hljs-keyword">var</span> args = [].slice.call(<span class="hljs-built_in">arguments</span>);
 
-            <span class="keyword">if</span>(<span class="keyword">typeof</span>(protocol) !== <span class="string">'string'</span> || <span class="keyword">typeof</span>(host) !== <span class="string">'string'</span>) {
-                protocol = <span class="string">'native:'</span>;
-                host = args[<span class="number">0</span>];
-                data = args[<span class="number">1</span>];
-                newProxy = args[<span class="number">2</span>];
-                uri = (protocol || <span class="string">'native:'</span>) + <span class="string">'//'</span> + host + <span class="string">'?params='</span>;
+            <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(protocol) !== <span class="hljs-string">'string'</span> || <span class="hljs-keyword">typeof</span>(host) !== <span class="hljs-string">'string'</span>) {
+                protocol = <span class="hljs-string">'native:'</span>;
+                host = args[<span class="hljs-number">0</span>];
+                data = args[<span class="hljs-number">1</span>];
+                newProxy = args[<span class="hljs-number">2</span>];
+                uri = (protocol || <span class="hljs-string">'native:'</span>) + <span class="hljs-string">'//'</span> + host + <span class="hljs-string">'?params='</span>;
             }
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
-                <span class="keyword">return</span>;
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
+                <span class="hljs-keyword">return</span>;
             }
 
             data = data || {};
 
-            <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> data) {
-                <span class="keyword">if</span>(data.hasOwnProperty(i)) {
-                    <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i]) === <span class="string">'function'</span>) {
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> data) {
+                <span class="hljs-keyword">if</span>(data.hasOwnProperty(i)) {
+                    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(data[i]) === <span class="hljs-string">'function'</span>) {
                         callbackName = that.buildCallback(data[i]);
                         data[i] = callbackName;
                     }
 
-                    <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i]) === <span class="string">'object'</span> &amp;&amp; data[i].hasOwnProperty(<span class="string">'length'</span>)) {
-                        <span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; data[i].length; j++) {
-                            <span class="keyword">if</span>(<span class="keyword">typeof</span>(data[i][j]) === <span class="string">'function'</span>) {
+                    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(data[i]) === <span class="hljs-string">'object'</span> &amp;&amp; data[i].hasOwnProperty(<span class="hljs-string">'length'</span>)) {
+                        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; data[i].length; j++) {
+                            <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(data[i][j]) === <span class="hljs-string">'function'</span>) {
                                 callbackName = that.buildCallback(data[i][j]);
                                 data[i][j] = callbackName;
                             }
                         }
                     }
 
-                    <span class="keyword">if</span>(i !== i.replace(<span class="regexp">/([A-Z])/g</span>,<span class="string">"_$1"</span>).toLowerCase()) {
-                        data[i.replace(<span class="regexp">/([A-Z])/g</span>,<span class="string">"_$1"</span>).toLowerCase()] = data[i];
-                        <span class="keyword">delete</span> data[i];
+                    <span class="hljs-keyword">if</span>(i !== i.replace(<span class="hljs-regexp">/([A-Z])/g</span>,<span class="hljs-string">"_$1"</span>).toLowerCase()) {
+                        data[i.replace(<span class="hljs-regexp">/([A-Z])/g</span>,<span class="hljs-string">"_$1"</span>).toLowerCase()] = data[i];
+                        <span class="hljs-keyword">delete</span> data[i];
                     }
                 }
             }
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'android'</span>) {
-                uri += encodeURIComponent(JSON.stringify(data));
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'android'</span>) {
+                uri += <span class="hljs-built_in">encodeURIComponent</span>(<span class="hljs-built_in">JSON</span>.stringify(data));
 
-                <span class="keyword">if</span>(uri.match(<span class="regexp">/^native:\/\//igm</span>)) {
-                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativeService'</span>] &amp;&amp; that.bridge[<span class="string">'startNativeService'</span>](uri);
+                <span class="hljs-keyword">if</span>(uri.match(<span class="hljs-regexp">/^native:\/\//igm</span>)) {
+                    that.bridge &amp;&amp; that.bridge[<span class="hljs-string">'startNativeService'</span>] &amp;&amp; that.bridge[<span class="hljs-string">'startNativeService'</span>](uri);
                 }
 
-                <span class="keyword">if</span>(uri.match(<span class="regexp">/^page:\/\//igm</span>))  {
-                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativePage'</span>] &amp;&amp; that.bridge[<span class="string">'startNativePage'</span>](uri);
+                <span class="hljs-keyword">if</span>(uri.match(<span class="hljs-regexp">/^page:\/\//igm</span>))  {
+                    that.bridge &amp;&amp; that.bridge[<span class="hljs-string">'startNativePage'</span>] &amp;&amp; that.bridge[<span class="hljs-string">'startNativePage'</span>](uri);
                 }
 
-                <span class="keyword">if</span>(uri.match(<span class="regexp">/^bridge:\/\//igm</span>)) {
-                    that.bridge &amp;&amp; that.bridge[<span class="string">'startNativeBridge'</span>] &amp;&amp; that.bridge[<span class="string">'startNativeBridge'</span>](uri);
+                <span class="hljs-keyword">if</span>(uri.match(<span class="hljs-regexp">/^bridge:\/\//igm</span>)) {
+                    that.bridge &amp;&amp; that.bridge[<span class="hljs-string">'startNativeBridge'</span>] &amp;&amp; that.bridge[<span class="hljs-string">'startNativeBridge'</span>](uri);
                 }
 
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'ios'</span>) {
-                uri += encodeURIComponent(JSON.stringify(data));
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'ios'</span>) {
+                uri += <span class="hljs-built_in">encodeURIComponent</span>(<span class="hljs-built_in">JSON</span>.stringify(data));
                 messageQueue.push(uri);
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            uri += encodeURIComponent(JSON.stringify(data));
+            uri += <span class="hljs-built_in">encodeURIComponent</span>(<span class="hljs-built_in">JSON</span>.stringify(data));
             that.sendURI(uri, newProxy);
         },
 
-        getRequestParam: <span class="keyword">function</span>(uri, param) {
-            <span class="keyword">var</span> value;
+        getRequestParam: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(uri, param)</span> {</span>
+            <span class="hljs-keyword">var</span> value;
             uri = uri || window.location.href;
-            value = uri.match(<span class="keyword">new</span> RegExp(<span class="string">'[\?\&amp;]'</span> + param + <span class="string">'=([^\&amp;]*)(\&amp;?)'</span>, <span class="string">'i'</span>));
-            <span class="keyword">return</span> value ? decodeURIComponent(value[<span class="number">1</span>]) : value;
+            value = uri.match(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'[\?\&amp;]'</span> + param + <span class="hljs-string">'=([^\&amp;]*)(\&amp;?)'</span>, <span class="hljs-string">'i'</span>));
+            <span class="hljs-keyword">return</span> value ? <span class="hljs-built_in">decodeURIComponent</span>(value[<span class="hljs-number">1</span>]) : value;
         },
 
-        getRequestParams: <span class="keyword">function</span>(uri) {
-            <span class="keyword">var</span> search = location.search.substring(<span class="number">1</span>);
+        getRequestParams: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(uri)</span> {</span>
+            <span class="hljs-keyword">var</span> search = location.search.substring(<span class="hljs-number">1</span>);
             uri = uri || window.location.href;
-            <span class="keyword">return</span> search ? JSON.parse(<span class="string">'{"'</span> + search.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'","'</span>).replace(<span class="regexp">/=/g</span>,<span class="string">'":"'</span>) + <span class="string">'"}'</span>, <span class="keyword">function</span>(key, value) {
-                <span class="keyword">return</span> key===<span class="string">""</span> ? value : decodeURIComponent(value);
+            <span class="hljs-keyword">return</span> search ? <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-string">'{"'</span> + search.replace(<span class="hljs-regexp">/&amp;/g</span>, <span class="hljs-string">'","'</span>).replace(<span class="hljs-regexp">/=/g</span>,<span class="hljs-string">'":"'</span>) + <span class="hljs-string">'"}'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key, value)</span> {</span>
+                <span class="hljs-keyword">return</span> key===<span class="hljs-string">""</span> ? value : <span class="hljs-built_in">decodeURIComponent</span>(value);
             }) : {};
         },</pre></div></div>
             
@@ -512,18 +512,18 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        getParams: <span class="keyword">function</span>() {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> params = that.getRequestParams();
-            <span class="keyword">var</span> client = that.client;
+        getParams: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> params = that.getRequestParams();
+            <span class="hljs-keyword">var</span> client = that.client;
 
-            <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> client) {
-                <span class="keyword">if</span>(client.hasOwnProperty(i) &amp;&amp; params.hasOwnProperty(i)) {
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> client) {
+                <span class="hljs-keyword">if</span>(client.hasOwnProperty(i) &amp;&amp; params.hasOwnProperty(i)) {
                     params[i] = client[i];
                 }
             }
 
-            <span class="keyword">return</span> params;
+            <span class="hljs-keyword">return</span> params;
         },
 
         notification: {</pre></div></div>
@@ -544,29 +544,29 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            alert: <span class="keyword">function</span>(message, alertCallback, title, buttonLabels) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
-                <span class="keyword">var</span> callback = <span class="keyword">function</span>(ret) {
-                    <span class="keyword">var</span> buttonIndex = ret.buttonIndex;
+            alert: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, alertCallback, title, buttonLabels)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+                <span class="hljs-keyword">var</span> callback = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ret)</span> {</span>
+                    <span class="hljs-keyword">var</span> buttonIndex = ret.buttonIndex;
 
-                    <span class="keyword">if</span>(Object.prototype.toString.call(alertCallback) === <span class="string">'[object Array]'</span>) {
-                        alertCallback[buttonIndex] &amp;&amp; alertCallback[buttonIndex].apply(<span class="keyword">this</span>, arguments);
-                        <span class="keyword">return</span>;
+                    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Object</span>.prototype.toString.call(alertCallback) === <span class="hljs-string">'[object Array]'</span>) {
+                        alertCallback[buttonIndex] &amp;&amp; alertCallback[buttonIndex].apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+                        <span class="hljs-keyword">return</span>;
                     }
 
                     alertCallback &amp;&amp; alertCallback();
                 };
 
-                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
-                    alert.apply(<span class="literal">null</span>, arguments);
-                    <span class="keyword">return</span>;
+                <span class="hljs-keyword">if</span>(that.superthat.platform === <span class="hljs-string">'h5'</span>) {
+                    alert.apply(<span class="hljs-literal">null</span>, <span class="hljs-built_in">arguments</span>);
+                    <span class="hljs-keyword">return</span>;
                 }
 
-                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(buttonLabels) === <span class="hljs-string">'string'</span>) {
                     buttonLabels = [buttonLabels];
                 }
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'alert'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'alert'</span>, {
                     message: message,
                     successCallback: callback,
                     title: title,
@@ -590,22 +590,22 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            confirm: <span class="keyword">function</span>(message, confirmCallback, title, buttonLabels) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            confirm: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, confirmCallback, title, buttonLabels)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
-                    <span class="keyword">if</span>(confirm.apply(<span class="literal">null</span>, arguments)) {
+                <span class="hljs-keyword">if</span>(that.superthat.platform === <span class="hljs-string">'h5'</span>) {
+                    <span class="hljs-keyword">if</span>(confirm.apply(<span class="hljs-literal">null</span>, <span class="hljs-built_in">arguments</span>)) {
                         confirmCallback &amp;&amp; confirmCallback();
                     }
 
-                    <span class="keyword">return</span>;
+                    <span class="hljs-keyword">return</span>;
                 }
 
-                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(buttonLabels) === <span class="hljs-string">'string'</span>) {
                     buttonLabels = [buttonLabels];
                 }
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'confirm'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'confirm'</span>, {
                     message: message,
                     title: title,
                     successCallback: confirmCallback,
@@ -630,19 +630,19 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            prompt: <span class="keyword">function</span>(message, value, promptCallback, title, buttonLabels) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            prompt: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, value, promptCallback, title, buttonLabels)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
-                    prompt.apply(<span class="literal">null</span>, arguments);
-                    <span class="keyword">return</span>;
+                <span class="hljs-keyword">if</span>(that.superthat.platform === <span class="hljs-string">'h5'</span>) {
+                    prompt.apply(<span class="hljs-literal">null</span>, <span class="hljs-built_in">arguments</span>);
+                    <span class="hljs-keyword">return</span>;
                 }
 
-                <span class="keyword">if</span>(<span class="keyword">typeof</span>(buttonLabels) === <span class="string">'string'</span>) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(buttonLabels) === <span class="hljs-string">'string'</span>) {
                     buttonLabels = [buttonLabels];
                 }
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'prompt'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'prompt'</span>, {
                     message: message,
                     value: value,
                     successCallback: promptCallback,
@@ -665,14 +665,14 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            toast: <span class="keyword">function</span>(message, milliseconds) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            toast: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, milliseconds)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-                <span class="keyword">if</span>(that.superthat.platform === <span class="string">'h5'</span>) {
-                    <span class="keyword">return</span>;
+                <span class="hljs-keyword">if</span>(that.superthat.platform === <span class="hljs-string">'h5'</span>) {
+                    <span class="hljs-keyword">return</span>;
                 }
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'toast'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'toast'</span>, {
                     message: message,
                     milliseconds: milliseconds
                 });
@@ -692,10 +692,10 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            beep: <span class="keyword">function</span>(times) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            beep: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(times)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'beep'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'beep'</span>, {
                     times: times
                 });
             },</pre></div></div>
@@ -714,10 +714,10 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-            vibrate: <span class="keyword">function</span>(milliseconds) {
-                <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            vibrate: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(milliseconds)</span> {</span>
+                <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-                that.superthat.pushBack(<span class="string">'bridge:'</span>, <span class="string">'vibrate'</span>, {
+                that.superthat.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'vibrate'</span>, {
                     milliseconds: milliseconds
                 });
             }
@@ -744,15 +744,15 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        openBrowser: <span class="keyword">function</span>(url) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        openBrowser: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 window.open(url);
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'open_system_browser'</span>, {
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'open_system_browser'</span>, {
                 url: url
             });
         },</pre></div></div>
@@ -772,15 +772,15 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        openAppStore: <span class="keyword">function</span>(url) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        openAppStore: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 window.open(url);
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'open_app_store'</span>, {
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'open_app_store'</span>, {
                 url: url
             });
         },</pre></div></div>
@@ -800,15 +800,15 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        setTitle: <span class="keyword">function</span>(title, subtitle) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        setTitle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, subtitle)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 document.title = title;
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'set_webview_title'</span>, {
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'set_webview_title'</span>, {
                 title: title,
                 subtitle: subtitle
             });
@@ -828,17 +828,17 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        open: <span class="keyword">function</span>(pagename, ext, successCallback, naviType, animeType) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
-            <span class="keyword">var</span> params = {
+        open: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pagename, ext, successCallback, naviType, animeType)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> params = {
                 page_name: pagename,
                 data: ext || {},
                 successCallback: successCallback,
-                naviType: naviType || <span class="number">0</span>,
-                animeType: <span class="keyword">typeof</span>(animeType) !== <span class="string">'undefined'</span> ? animeType : <span class="number">4</span>
+                naviType: naviType || <span class="hljs-number">0</span>,
+                animeType: <span class="hljs-keyword">typeof</span>(animeType) !== <span class="hljs-string">'undefined'</span> ? animeType : <span class="hljs-number">4</span>
             };
 
-            that.pushBack(<span class="string">'page:'</span>, <span class="string">'goto'</span>, params);
+            that.pushBack(<span class="hljs-string">'page:'</span>, <span class="hljs-string">'goto'</span>, params);
         },</pre></div></div>
             
         </li>
@@ -856,20 +856,20 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        back: <span class="keyword">function</span>(pagename, ext) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        back: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pagename, ext)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 history.back();
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            <span class="keyword">if</span>(pagename) {
-                that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'back'</span>, ext);
-                <span class="keyword">return</span>;
+            <span class="hljs-keyword">if</span>(pagename) {
+                that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'back'</span>, ext);
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'bridge:'</span>, <span class="string">'back'</span>, ext);
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'back'</span>, ext);
         },</pre></div></div>
             
         </li>
@@ -886,21 +886,61 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        close: <span class="keyword">function</span>(ext) {
-            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        close: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ext)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
-            <span class="keyword">if</span>(that.platform === <span class="string">'h5'</span>) {
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span>) {
                 window.close();
-                <span class="keyword">return</span>;
+                <span class="hljs-keyword">return</span>;
             }
 
-            that.pushBack(<span class="string">'page:'</span>, <span class="string">'close'</span>, ext);
+            that.pushBack(<span class="hljs-string">'page:'</span>, <span class="hljs-string">'close'</span>, ext);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>客户端极简支付，如果有额外的数据则通过<code>ext</code>参数传递给客户端。</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        minipay: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alipayId, nextUrl, ext, successCallback, failCallback)</span> {</span>
+            <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">var</span> payResult;
+            <span class="hljs-keyword">var</span> params = {
+                alipay_id: alipayId,
+                data: ext || {},
+                successCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ret)</span> {</span>
+                    payResult = <span class="hljs-built_in">JSON</span>.parse(ret);
+
+                    <span class="hljs-keyword">if</span>(payResult.resultStatus === <span class="hljs-string">'9000'</span>) {
+                        successCallback &amp;&amp; successCallback(payResult);
+                        <span class="hljs-keyword">return</span>;
+                    }
+
+                    failCallback &amp;&amp; failCallback(payResult);
+                }
+            };
+
+            <span class="hljs-keyword">if</span>(that.platform === <span class="hljs-string">'h5'</span> &amp;&amp; nextUrl) {
+                window.location.href = nextUrl;
+                <span class="hljs-keyword">return</span>;
+            }
+
+            that.pushBack(<span class="hljs-string">'bridge:'</span>, <span class="hljs-string">'minipay'</span>, params);
         }
     };
 
-    <span class="keyword">this</span>.Bridge = Bridge;
+    <span class="hljs-keyword">this</span>.Bridge = Bridge;
 
-}).call(<span class="keyword">this</span>);</pre></div></div>
+}).call(<span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
         
