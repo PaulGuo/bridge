@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bridge Demo</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+    <script type="text/javascript" src="http://a.tbcdn.cn/apps/et/trip-html5/common/core/zepto.js"></script>
+    <script type="text/javascript" src="../index.js"></script>
+</head>
+<body>
+
+    <style type="text/css">
+        body {
+            max-width: 320px;
+            font-size: 14px;
+        }
+        
+        input {
+            display: block;
+            width: 100%;
+        }
+
+        fieldset {
+            font-size: 12px;
+            margin: 0 0 10px;
+            color: #333;
+            border: 1px solid #aaa;
+        }
+    </style>
+
+    <!--外跳测试-->
+
+    <fieldset>
+        <legend>外跳测试</legend>
+        <input type="button" value="机票查询外跳" class="J_nativeFlightSearch" />
+        <input type="button" value="机票列表外跳" class="J_nativeFlightList" />
+        <input type="button" value="酒店详情页外跳" class="J_nativeHotelDetail" />
+        <input type="button" value="火车票详情页外跳" class="J_nativeTrainDetail" />
+    </fieldset>
+
+    <!--SDK相关测试-->
+
+    <fieldset>
+        <legend>SDK相关测试</legend>
+        <input type="button" value="页面生存环境检测" class="J_envDetect" />
+        <input type="button" value="页面UA检测" class="J_uaDetect" />
+        <input type="button" value="握手信号检测" class="J_handShake" />
+
+        <input type="button" value="警告提示框" class="J_alert" />
+        <input type="button" value="警告提示框（多个按钮）" class="J_alertMultiButtons" />
+        <input type="button" value="确认提示框" class="J_confirm" />
+        <input type="button" value="提示对话框" class="J_prompt" />
+        <input type="button" value="蜂鸣声" class="J_beep" />
+        <input type="button" value="设备震动" class="J_vibrate" />
+        <input type="button" value="弱提示" class="J_toast" />
+
+        <input type="button" value="登录跳转拦截检测" class="J_login" />
+        <input type="button" value="登出跳转拦截检测" class="J_logout" />
+
+        <input type="button" value="设备名称" class="J_deviceName" />
+        <input type="button" value="当前所用的JS桥版本号" class="J_bridgeVersion" />
+        <input type="button" value="平台类型" class="J_platform" />
+        <input type="button" value="设备全球唯一标识" class="J_guid" />
+        <input type="button" value="设备信息" class="J_deviceModel" />
+
+        <input type="button" value="客户端版本号" class="J_clientVersion" />
+
+        <input type="button" value="本地存储支持与否" class="J_localStorageSupport" />
+
+        <input type="button" value="connection.type" class="J_connectionType" />
+        <input type="button" value="connection.UNKNOWN" class="J_connectionUnknown" />
+        <input type="button" value="connection.ETHERNET" class="J_connectionEthernet" />
+        <input type="button" value="connection.WIFI" class="J_connectionWifi" />
+        <input type="button" value="connection.CELL_2G" class="J_connectionCell2G" />
+        <input type="button" value="connection.CELL_3G" class="J_connectionCell3G" />
+        <input type="button" value="connection.CELL_4G" class="J_connectionCell4G" />
+        <input type="button" value="connection.CELL" class="J_connectionCell" />
+        <input type="button" value="connection.NONE" class="J_connectionNone" />
+    </fieldset>
+
+    <!--其它接口测试-->
+
+    <fieldset>
+        <legend>其它接口测试</legend>
+        <input type="button" value="跳到系统浏览器" class="J_openBrowser" />
+        <input type="button" value="跳到AppStore" class="J_jumpAppStore" />
+        <input type="button" value="设置顶部Title" class="J_setTitle" />
+        <input type="button" value="客户端页面回退" class="J_clientBack" />
+        <input type="button" value="获取客户端定位信息" class="J_clientLocation" />
+        <input type="button" value="并发多个回调测试" class="J_multiPushBack" />
+        <input type="button" value="手动调用网络状态" class="J_networkType" />
+        <input type="button" value="客户端极简支付" class="J_minipay" />
+    </fieldset>
+
+    <fieldset>
+        <button onclick="testpage()">城市</button>
+        <button onclick="backpage()">back page</button>
+        <button onclick="getTime()">获取服务端时间</button>
+        <button onclick="getclientTime()">获取客户端时间</button>
+
+        <button onclick="share()">分享</button>
+        <button onclick="getDevice()">设备信息</button>
+        <button onclick="geo()">地理位置</button>
+        <button onclick="xwin()">新窗口（带叉）</button>
+        <button onclick="notitlewin()">无头窗口</button>
+    </fieldset>
+    
+    <script type="text/javascript">
+        Bridge = new Bridge();
+
+        // 外跳测试
+
+        $('.J_nativeFlightSearch').click(function() {
+            Bridge.pushBack('page:', 'flight/flightSearch', {
+                successCallback: function(r) {
+                    alert(JSON.Stringify(r));
+                }
+            });
+        });
+
+        $('.J_nativeFlightList').click(function() {
+            Bridge.pushBack('page:', 'flight/flightList');
+        });
+
+        $('.J_nativeHotelDetail').click(function() {
+            Bridge.pushBack('page:', 'hotel/deatil');
+        });
+
+        $('.J_nativeTrainDetail').click(function() {
+            Bridge.pushBack('page:', 'train/deatil');
+        });
+
+        // SDK相关测试
+
+        $('.J_envDetect').click(function() {
+            alert(Bridge.platform);
+        });
+
+        $('.J_uaDetect').click(function() {
+            alert(navigator.userAgent);
+        });
+
+        $('.J_handShake').click(function() {
+            Bridge.handShake(function() {
+                alert('handShake over.');
+                alert([].slice.call(arguments).join(', '));
+            });
+        });
+
+        $('.J_alert').click(function() {
+            Bridge.notification.alert('Hi, bridge.');
+        });
+
+        $('.J_alertMultiButtons').click(function() {
+            Bridge.notification.alert('Hi, bridge.', [
+                function() {alert(1);},
+                function() {alert(2);}
+            ], 'bridge title', ['ok', 'cancel']);
+        });
+
+        $('.J_confirm').click(function() {
+            Bridge.notification.confirm('Hi, are u bridge?', [
+                function() {
+                    
+                },
+
+                function() {
+                    Bridge.notification.alert('Ok, got it.');
+                },
+
+                function() {
+                    Bridge.notification.alert('Ok, got it 2.');
+                },
+
+                function() {
+                    Bridge.notification.alert('Ok, got it 3.');
+                }
+                ], 'bridge title', ['cancel', 'btn1', 'btn2', 'btn3']);
+        });
+
+        $('.J_prompt').click(function() {
+            Bridge.notification.prompt('Hi, bridge, how old are u?', 'default value', [
+                function(v) {
+                    alert(v);
+                },
+
+                function(v) {
+                    alert(v);
+                }
+            ], 'title', ['ok', 'cancel']);
+        });
+
+        $('.J_beep').click(function() {
+            Bridge.notification.beep(5);
+        });
+
+        $('.J_vibrate').click(function() {
+            Bridge.notification.vibrate(5000);
+        });
+
+        $('.J_toast').click(function() {
+            Bridge.notification.toast('Hi, 我是弱提示！');
+        });
+
+        $('.J_login').click(function() {
+            window.location.href = 'http://login.m.taobao.com/login.htm?tpl_redirect_url=http%3A%2F%2Fm.taobao.com';
+        });
+
+        $('.J_logout').click(function() {
+            window.location.href = 'http://login.m.taobao.com/logout.htm?tpl_redirect_url=http%3A%2F%2Fm.taobao.com';
+        });
+
+        $('.J_deviceName').click(function() {
+            alert(Bridge.device.name);
+        });
+
+        $('.J_bridgeVersion').click(function() {
+            alert(Bridge.device.bridge);
+        });
+
+        $('.J_platform').click(function() {
+            alert(Bridge.device.platform);
+        });
+
+        $('.J_guid').click(function() {
+            alert(Bridge.device.uuid);
+        });
+
+        $('.J_deviceModel').click(function() {
+            alert(Bridge.device.model);
+        });
+
+        $('.J_clientVersion').click(function() {
+            alert(Bridge.client.version);
+        });
+
+        $('.J_localStorageSupport').click(function() {
+            try {
+                localStorage.setItem('detect', 'detect');
+                localStorage.removeItem('detect');
+                alert('support');
+                return true;
+            } catch(e) {
+                alert('not support');
+                return false;
+            }
+        });
+
+        $('.J_connectionType').click(function() {
+            alert(Bridge.connection.type);
+        });
+
+        $('.J_connectionUnknown').click(function() {
+            alert(Bridge.connection.UNKNOWN);
+        });
+
+        $('.J_connectionEthernet').click(function() {
+            alert(Bridge.connection.ETHERNET);
+        });
+
+        $('.J_connectionWifi').click(function() {
+            alert(Bridge.connection.WIFI);
+        });
+
+        $('.J_connectionCell2G').click(function() {
+            alert(Bridge.connection.CELL_2G);
+        });
+
+        $('.J_connectionCell3G').click(function() {
+            alert(Bridge.connection.CELL_3G);
+        });
+
+        $('.J_connectionCell4G').click(function() {
+            alert(Bridge.connection.CELL_4G);
+        });
+
+        $('.J_connectionCell').click(function() {
+            alert(Bridge.connection.CELL);
+        });
+
+        $('.J_connectionNone').click(function() {
+            alert(Bridge.connection.NONE);
+        });
+
+        // 其它接口测试
+
+        $('.J_openBrowser').click(function() {
+            Bridge.openBrowser('http://triph5.m.taobao.com');
+        });
+
+        $('.J_jumpAppStore').click(function() {
+            Bridge.openAppStore('itms-appss://itunes.apple.com/cn/app/id453691481?mt=8');
+        });
+
+        $('.J_setTitle').click(function() {
+            Bridge.setTitle('随机数' + Math.random());
+        });
+
+        $('.J_clientBack').click(function() {
+            Bridge.goback();
+        });
+
+        $('.J_clientLocation').click(function() {
+            Bridge.pushBack('lbs/locate', {
+                successCallback: function(resp) {
+                    alert('客户端定位信息：' + resp);
+                },
+                failCallback: function() {
+                    alert('获取客户端定位信息失败');
+                }
+            });
+        });
+
+        $('.J_multiPushBack').click(function() {
+            Bridge.notification.beep(5);
+            Bridge.notification.vibrate(5000);
+        });
+
+        $('.J_networkType').click(function() {
+            Bridge.connectionInfoDetect();
+        });
+
+        $('.J_minipay').click(function() {
+            var alipayId = '2014031911001001980042949292';
+            var nextUrl = 'http://maliprod.alipay.com/w/trade_pay.do?alipay_trade_no=2014031911001001980042923761&s_id=dffe543726f83f1b5021171aeb3ebcb7&tcode=eyJiaXpPcmRlcklkcyI6IjU3NjQ2OTQ2NDQ5MTM4NyIsInR5cGUiOiIzIiwiYnV5ZXJJZCI6IjEwNDQxOTg3MTMifQ%3D%3D&pay_order_id=576469464491387&refer=tbc';
+
+            Bridge.minipay(alipayId, nextUrl, {}, function(r) {
+                alert('success');
+                alert(JSON.stringify(r));
+            }, function(r) {
+                alert('failed');
+                alert(JSON.stringify(r));
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+      var b = Bridge;
+      function notitlewin(){
+        b.pushBack("page:","goto",{"page_name":"act_webview","data":{show_title:0,url:"http://www.baidu.com"}},true);
+      }
+      function xwin(){
+        b.pushBack("page:","goto",{"page_name":"act_webview","data":{"title":"下单","right_btn_type":"3",url:"http://www.baidu.com"}},true);
+      }
+      function getLoc(data){
+        alert(data.city);
+      }
+      function geo(){
+        b.pushBack("native:","lbs/locate",{data:{"successCallback":"getLoc","failCallback":"failLoc"}},true);
+      }
+      function getinfo(data){
+        alert(data.ttid);
+        alert(data.push_token);
+        alert(data.device_id);
+      }
+      function getDevice(){
+        b.pushBack("bridge:","client_info",{data:{"successCallback":"getinfo"}},true);
+      }
+      function share(){
+        b.pushBack("page:","goto",{page_name:"share",data:{titleContent:"testit","textContent":"djkfsjdklfjslkdjlkdsjf","urlContent":"http://www.baidu.com","imageUrl":"http://img03.taobaocdn.com/tps/i3/T1Tf6CXbdnXXcCcBHm-72-72.png"}},true);
+      }
+      function getTime(){
+        b.pushBack("bridge:","server_time",{data:{"successCallback":"fntimeback"}},true);
+      }
+      function getclientTime(){
+        b.pushBack("bridge:","client_time",{data:{"successCallback":"fnctimeback"}},true);
+      }
+      function testpage(){
+        b.pushBack("page:","goto",{"page_name":"simple_choose_city","data":{"current_city":{"city_name":"北京"},"city_list":[{"city_name":"北京"},{"city_name":"上海"}]},"success_callback":"citycallback"},true);
+      }
+      function backpage(){
+        b.pushBack("page:","close",{}, true);        
+      }
+      function citycallback(data){
+        alert(data.city);
+      }
+      function fntimeback(data){
+        alert(data.timestamp);
+        alert(data.date);
+      }
+      function fnctimeback(data){
+        alert(data.timestamp);
+        alert(data.date);
+      }
+      function failLoc(){
+      	alert("fail");
+      }
+    </script>
+
+</body>
+</html>
