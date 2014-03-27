@@ -111,6 +111,8 @@
 
             that.pushBack('bridge:', 'client_info', {
                 successCallback: function(client_info) {
+                    client_info = JSON.parse(client_info || '{}');
+                    client_info.version = that.client.version; //hack, android 3.6.0以下返回的字段缺失
                     that.client = client_info; //ttid, push_token, device_id, client_version, client_type
                 }
             });
