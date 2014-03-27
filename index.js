@@ -251,7 +251,7 @@
                 }
             }
 
-            if(that.platform === 'android') {
+            if(that.platform === 'android' && that.client.version < 360) {
                 uri += encodeURIComponent(JSON.stringify(data));
 
                 if(uri.match(/^native:\/\//igm)) {
@@ -266,6 +266,12 @@
                     that.bridge && that.bridge['startNativeBridge'] && that.bridge['startNativeBridge'](uri);
                 }
 
+                return;
+            }
+
+            if(that.platform === 'android' && that.client.version >= 360) {
+                uri += encodeURIComponent(JSON.stringify(data));
+                prompt('alitrip-android://' + uri);
                 return;
             }
 
@@ -558,6 +564,11 @@
             };
 
             if(that.platform === 'h5' && nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            if(that.client.version < 350 && nextUrl) {
                 window.location.href = nextUrl;
                 return;
             }
