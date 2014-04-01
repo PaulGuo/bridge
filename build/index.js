@@ -553,6 +553,7 @@
             var params = {
                 alipay_id: alipayId,
                 data: ext || {},
+                failCallback: failCallback,
                 successCallback: function(ret) {
                     payResult = JSON.parse(ret);
 
