@@ -557,6 +557,11 @@
                 successCallback: function(ret) {
                     payResult = JSON.parse(ret);
 
+                    // iOS SDK返回的字段名首字母是大写，暂时兼容处理
+                    if(that.platform === 'ios') {
+                        payResult.resultStatus = payResult.ResultStatus;
+                    }
+
                     if(payResult.resultStatus === '9000') {
                         successCallback && successCallback(payResult);
                         return;
