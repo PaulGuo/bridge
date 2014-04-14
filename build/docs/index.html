@@ -927,7 +927,9 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
                 data: ext || {},
                 failCallback: failCallback,
                 successCallback: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ret)</span> {</span>
-                    payResult = <span class="hljs-built_in">JSON</span>.parse(ret);</pre></div></div>
+                    <span class="hljs-keyword">try</span> {
+                        payResult = <span class="hljs-built_in">JSON</span>.parse(ret);
+                    } <span class="hljs-keyword">catch</span>(e) {</pre></div></div>
             
         </li>
         
@@ -937,6 +939,26 @@ Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; MI 2 Build/JRO03L; AliTrip/2.8.0) A
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>iOS客户端3.5版本返回的JSON格式有误，解析会出问题</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span>(ret.match(<span class="hljs-regexp">/"ResultStatus":"9000"/igm</span>)) {
+                            payResult = {
+                                ResultStatus: <span class="hljs-string">'9000'</span>
+                            };
+                        }
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>iOS SDK返回的字段名首字母是大写，暂时兼容处理</p>
 

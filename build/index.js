@@ -555,7 +555,16 @@
                 data: ext || {},
                 failCallback: failCallback,
                 successCallback: function(ret) {
-                    payResult = JSON.parse(ret);
+                    try {
+                        payResult = JSON.parse(ret);
+                    } catch(e) {
+                        // iOS客户端3.5版本返回的JSON格式有误，解析会出问题
+                        if(ret.match(/"ResultStatus":"9000"/igm)) {
+                            payResult = {
+                                ResultStatus: '9000'
+                            };
+                        }
+                    }
 
                     // iOS SDK返回的字段名首字母是大写，暂时兼容处理
                     if(that.platform === 'ios') {
